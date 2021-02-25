@@ -1,13 +1,35 @@
 <template>
-  <div id="app">
-    <router-view/>
-  </div>
+  <v-app>
+    <nav class="d-flex justify-center align-center">
+      <v-btn @click.native="logOut" color="red" v-if="!isValidRoute"
+        >LOGOUT</v-btn
+      >
+    </nav>
+    <router-view></router-view>
+  </v-app>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+<script>
+export default {
+  name: 'App',
+  data () {
+    return {
+      routes: ['Login', 'SignUp', 'ForgotPassword']
+    }
+  },
+  computed: {
+    isValidRoute () {
+      return this.routes.includes(this.$route.name)
+    }
+  },
+  methods: {
+    async logOut () {
+      await this.$store.dispatch('auth/logOut')
+      this.$router.push({ name: 'Login' })
+    }
+  }
 }
+</script>
+
+<style lang="scss" scoped>
 </style>
