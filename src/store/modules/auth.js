@@ -1,16 +1,18 @@
 import mutations from '@/store/mutations'
 import { fireBaseLogin, fireBaseSignOut, fireBaseSignUp, fireBaseResetPassword } from '@/services/auth.service'
-const { IS_LOGGED_IN, IS_LOGIN_IN_PROGRESS } = mutations
+const { IS_LOGGED_IN, IS_LOGIN_IN_PROGRESS, IS_FIRST_LOGIN } = mutations
 
 const authStore = {
   namespaced: true,
   state: {
-    isLoggedIn: false,
+    isLoggedIn: Boolean(localStorage.getItem(process.env.VUE_APP_TOKEN_KEY)),
+    isFirstLogin: false,
     loginInProgress: false
   },
   getters: {
     isLoggedIn: ({ isLoggedIn }) => isLoggedIn,
-    loginInProgress: ({ loginInProgress }) => loginInProgress
+    loginInProgress: ({ loginInProgress }) => loginInProgress,
+    isFirstLogin: ({ isFirstLogin }) => isFirstLogin
   },
   mutations: {
     [IS_LOGGED_IN] (state, bool) {
@@ -18,6 +20,9 @@ const authStore = {
     },
     [IS_LOGIN_IN_PROGRESS] (state, bool) {
       state.loginInProgress = bool
+    },
+    [IS_FIRST_LOGIN] (state, bool) {
+      state.isFirstLogin = bool
     }
   },
   actions: {
@@ -46,7 +51,8 @@ const authStore = {
     },
     async SignUp ({ commit }, { email, password }) {
       try {
-        await fireBaseSignUp(email, password)
+        const data = await fireBaseSignUp(email, password)
+        commit('IS_FIRST_LOGIN', data.additionalUserInfo.isNewUser)
       } catch (error) {
         console.log(error)
       }

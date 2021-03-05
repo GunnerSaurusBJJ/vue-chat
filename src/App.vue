@@ -4,14 +4,12 @@
       <v-btn @click.native="logOut" color="red" v-if="!isValidRoute"
         >LOGOUT</v-btn
       >
-      <span @click="token">show token</span>
     </nav>
     <router-view></router-view>
   </v-app>
 </template>
 
 <script>
-import firebase from '@/plugins/firebase'
 export default {
   name: 'App',
   data () {
@@ -28,13 +26,6 @@ export default {
     async logOut () {
       await this.$store.dispatch('auth/logOut')
       this.$router.push({ name: 'Login' })
-    },
-    token () {
-      firebase.auth().currentUser.getIdToken(/* forceRefresh */ true).then(function (idToken) {
-        console.log(idToken)
-      }).catch(function (error) {
-        console.log(error)
-      })
     }
   }
 }

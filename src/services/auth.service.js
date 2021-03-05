@@ -1,5 +1,6 @@
 import firebase from '@/plugins/firebase'
 import store from '@/store'
+
 export const fireBaseLogin = async (email, password) => {
   try {
     const data = await firebase.auth().signInWithEmailAndPassword(email, password)
@@ -32,6 +33,15 @@ export const fireBaseResetPassword = async (email) => {
   try {
     const data = await firebase.auth().sendPasswordResetEmail(email)
     return data
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+export const fireBaseIdToken = async () => {
+  try {
+    const token = await firebase.auth().currentUser.getIdToken()
+    return token
   } catch (error) {
     console.error(error)
   }

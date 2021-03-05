@@ -17,6 +17,11 @@ const routes = [
     path: '/forgot-password',
     name: 'ForgotPassword',
     component: () => import('../views/ForgotPassword.vue')
+  },
+  {
+    path: '/first-login',
+    name: 'FirstLoginSettings',
+    component: () => import('../views/FirstLoginSettings.vue')
   }
 ]
 

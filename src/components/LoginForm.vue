@@ -75,13 +75,22 @@ export default {
   },
   computed: {
     ...mapGetters({
-      loginInProgress: 'auth/loginInProgress'
+      loginInProgress: 'auth/loginInProgress',
+      isLoggedIn: 'auth/isLoggedIn'
     })
+  },
+  watch: {
+    isLoggedIn: 'checkIsLogged'
   },
   methods: {
     ...mapActions({
       login: 'auth/login'
     }),
+    checkIsLogged (val) {
+      if (val) {
+        this.$router.push('/')
+      }
+    },
     onSubmit () {
       this.$v.form.$touch()
       if (!this.$v.form.$invalid) {

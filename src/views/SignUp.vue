@@ -62,7 +62,7 @@
         <v-col cols="12" md="4">
           <v-text-field
             v-model="form.password"
-            label="Pasword"
+            label="Password"
             required
           ></v-text-field>
           <p
@@ -123,7 +123,7 @@
 
 <script>
 import { required, minLength, email } from 'vuelidate/lib/validators'
-
+import { mapGetters } from 'vuex'
 export default {
   name: 'SignUp',
   data () {
@@ -164,6 +164,14 @@ export default {
       }
     }
   },
+  computed: {
+    ...mapGetters({
+      isFirstLogin: 'auth/isFirstLogin'
+    })
+  },
+  watch: {
+    isFirstLogin: 'redirectToFirstLogin'
+  },
   methods: {
     signUp () {
       this.$v.form.$touch()
@@ -175,6 +183,11 @@ export default {
           password: this.form.password
         }
         this.$store.dispatch('auth/SignUp', user)
+      }
+    },
+    redirectToFirstLogin (val) {
+      if (val) {
+        this.$router.push({ name: 'FirstLoginSettings' })
       }
     }
   }

@@ -1,5 +1,5 @@
 import mutations from '@/store/mutations'
-
+import axios from '@/plugins/axios'
 const { USER } = mutations
 
 const userStore = {
@@ -21,6 +21,15 @@ const userStore = {
         commit(USER, user)
       },
       root: true
+    },
+    async createUserInfo ({ commit }, data) {
+      try {
+        const user = await axios.post('/users', data)
+        console.log(user)
+        commit(USER, user)
+      } catch (error) {
+        console.error(error)
+      }
     }
   }
 }

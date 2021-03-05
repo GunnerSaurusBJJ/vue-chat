@@ -5,7 +5,7 @@ import firebase from '@/plugins/firebase'
 import auth from './modules/auth'
 import notify from './modules/notify'
 import user from './modules/user'
-import router from '@/router'
+import { fireBaseIdToken } from '@/services/auth.service'
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
@@ -16,11 +16,14 @@ const store = new Vuex.Store({
   }
 })
 
-firebase.auth().onAuthStateChanged((userData) => {
+firebase.auth().onAuthStateChanged(async (userData) => {
   store.dispatch('setIsLoggedInState', Boolean(userData))
   store.dispatch('setUserState', userData)
   if (userData) {
-    router.push('/')
+    const token = await fireBaseIdToken()
+    localStorage.setItem(process.env.VUE_APP_TOKEN_KEY, token)
+  } else {
+    localStorage.removeItem(process.env.VUE_APP_TOKEN_KEY)
   }
 })
 
